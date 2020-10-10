@@ -57,13 +57,14 @@ public class TaskManager {
           pokazListe(zadania);
           break;
         case "remove":
-          usuwanieZadania(zadania,podajNumer());
+          usuwanieZadania(zadania, podajNumer());
           System.out.println("Zadanie zostało pomyślnie usunięte.");
           break;
         case "add":
           dodawanieZadania();
           break;
         case "exit":
+          zapiszWPliku(FILE_NAME, zadania);
           System.out.println(ConsoleColors.RED);
           System.out.println("Bye, bye.");
           System.exit(0);
@@ -98,39 +99,54 @@ public class TaskManager {
     }
     return false;
   }
-  public static int podajNumer(){
+
+  public static int podajNumer() {
     Scanner scanner = new Scanner(System.in);
     System.out.println("Podaj numer zadania do usunięcia");
     String num = scanner.nextLine();
-    while(!czyWiekszaRownaZero(num)){
+    while (!czyWiekszaRownaZero(num)) {
       System.out.println("Nieprawidłowa watrość. Podaj numer większy lub równy 0");
       scanner.nextLine();
     }
 
     return Integer.parseInt(num);
   }
-  private static void usuwanieZadania(String[][] tab, int index){
-    try{
-      if(index<tab.length){
-        zadania = ArrayUtils.remove(tab,index);
+
+  private static void usuwanieZadania(String[][] tab, int index) {
+    try {
+      if (index < tab.length) {
+        zadania = ArrayUtils.remove(tab, index);
       }
     } catch (ArrayIndexOutOfBoundsException ex) {
       System.err.println("Podany element nie występuje na liście.");
     }
   }
-  private static void dodawanieZadania(){
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("Podaj opis zadania.");
-    String opis = scanner.nextLine();
-    System.out.println("Podaj termin wykonania zadania.");
-    String data = scanner.nextLine();
-    System.out.println("Czy zadanie jest ważne: true/false");
-    String czyWazne = scanner.nextLine();
-    zadania = Arrays.copyOf(zadania, zadania.length+1);
-    zadania[zadania.length-1] = new String[3];
-    zadania[zadania.length-1][0] = opis;
-    zadania[zadania.length-1][1] = data;
-    zadania[zadania.length-1][2] = czyWazne;
 
+  private static void dodawanieZadania() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Podaj opis zadania. ");
+    String opis = scanner.nextLine();
+    System.out.println( "Podaj termin wykonania zadania. ");
+    String data = scanner.nextLine();
+    System.out.println("Czy zadanie jest ważne: true/false ");
+    String czyWazne = scanner.nextLine();
+    zadania = Arrays.copyOf(zadania, zadania.length + 1);
+    zadania[zadania.length - 1] = new String[3];
+    zadania[zadania.length - 1][0] = opis;
+    zadania[zadania.length - 1][1] = data;
+    zadania[zadania.length - 1][2] = czyWazne;
+  }
+
+  public static void zapiszWPliku(String fileName, String[][] tab) {
+    Path dir = Paths.get(fileName);
+    String[] lista = new String[zadania.length];
+    for (int i = 0; i < tab.length; i++) {
+      lista[i] = String.join(", ", tab[i]);
+    }
+    try {
+      Files.write(dir, Arrays.asList(lista));
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
   }
 }
