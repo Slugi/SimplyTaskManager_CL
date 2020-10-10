@@ -15,7 +15,7 @@ public class TaskManager {
   static final String[] OPTIONS = {"add", "remove", "list", "exit"};
   static String[][] zadania;
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     zadania = odczyt(FILE_NAME);
     odczyt(FILE_NAME);
     wybierzOpcje(OPTIONS);
@@ -34,9 +34,7 @@ public class TaskManager {
       tab = new String[strings.size()][strings.get(0).split(",").length];
       for (int i = 0; i < strings.size(); i++) {
         String[] splitt = strings.get(i).split(",");
-        for (int j = 0; j < splitt.length; j++) {
-          tab[i][j] = splitt[j];
-        }
+        System.arraycopy(splitt, 0, tab[i], 0, splitt.length);
       }
 
     } catch (IOException e) {
@@ -51,23 +49,19 @@ public class TaskManager {
     while (scan.hasNextLine()) {
       String input = scan.nextLine();
       switch (input) {
-        case "list":
-          pokazListe(zadania);
-          break;
-        case "remove":
+        case "list" -> pokazListe(zadania);
+        case "remove" -> {
           usuwanieZadania(zadania, podajNumer());
           System.out.println("Punkt został pomyślnie usunięty.");
-          break;
-        case "add":
-          dodawanieZadania();
-          break;
-        case "exit":
+        }
+        case "add" -> dodawanieZadania();
+        case "exit" -> {
           zapiszWPliku(FILE_NAME, zadania);
           System.out.println(ConsoleColors.RED);
           System.out.println("Bye, bye.");
           System.exit(0);
-        default:
-          System.out.println("Wybierz prawidłową opcję");
+        }
+        default -> System.out.println("Wybierz prawidłową opcję");
       }
       menu(OPTIONS);
     }
