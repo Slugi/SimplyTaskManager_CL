@@ -1,39 +1,80 @@
 package pl.coderslab;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class TaskManager {
   static final String FILE_NAME = "tasks.csv";
   static final String[] OPTIONS = {"add", "remove", "list", "exit"};
-  //  public static void main(String[] args){}
-  //  public static void main(String[] args){}
-  //  public static void main(String[] args){}
-  //  public static void main(String[] args){}
+  static String[][] Tasks;
+
   public static void main(String[] args) throws IOException {
-    chooseOption(OPTIONS);
+    Tasks = odczyt(FILE_NAME);
     odczyt(FILE_NAME);
+    chooseOption(OPTIONS);
+    menu(OPTIONS);
   }
 
-  public static void odczyt(String FILE_NAME) {
-    Path path = Paths.get(FILE_NAME);
-    StringBuilder reading = new StringBuilder();
-    try {
-      Scanner scan = new Scanner(path);
-      while (scan.hasNextLine()) {
-        reading.append(scan.nextLine() + "\n");
-      }
-    } catch (IOException ex) {
-      System.err.println("Nie można odczytać pliku.");
+  public static String[][] odczyt(String fileName) {
+    Path dir = Paths.get(fileName);
+    if (!Files.exists(dir)) {
+      System.out.println("Plik nie istnieje.");
+      System.exit(0);
     }
-    System.out.println(reading.toString());
+    String[][] tab = null;
+    try {
+      List<String> strings = Files.readAllLines(dir);
+      tab = new String[strings.size()][strings.get(0).split(",").length];
+      for (int i = 0; i < strings.size(); i++) {
+        String[] splitt = strings.get(i).split(",");
+        for (int j = 0; j < splitt.length; j++) {
+          tab[i][j] = splitt[j];
+        }
+      }
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return tab;
   }
 
   public static void chooseOption(String[] tab) {
-    Scanner input = new Scanner(System.in);
+    menu(OPTIONS);
+    Scanner scan = new Scanner(System.in);
+    while (scan.hasNextLine()) {
+      String input = scan.nextLine();
+      switch (input) {
+        case "list":
+          pokazListe(Tasks);
+          break;
+        case "exit":
+          System.out.println(ConsoleColors.RED);
+          System.out.println("Bye, bye.");
+          System.exit(0);
+        default:
+          System.out.println("Please select a correct option");
+      }
+      menu(OPTIONS);
+    }
+  }
+
+  public static void pokazListe(String[][] tab) {
+    for (int i = 0; i < tab.length; i++) {
+      System.out.print(i + " : ");
+      for (int j = 0; j < tab[i].length; j++) {
+        System.out.print(tab[i][j] + " ");
+      }
+      System.out.println();
+    }
+  }
+
+  public static void menu(String[] tab) {
     System.out.println(ConsoleColors.BLUE);
     System.out.println("Please select an option: " + ConsoleColors.RESET);
     for (String option : tab) {
