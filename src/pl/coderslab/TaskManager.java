@@ -2,8 +2,6 @@ package pl.coderslab;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,7 +56,7 @@ public class TaskManager {
           break;
         case "remove":
           usuwanieZadania(zadania, podajNumer());
-          System.out.println("Zadanie zostało pomyślnie usunięte.");
+          System.out.println("Punkt został pomyślnie usunięty.");
           break;
         case "add":
           dodawanieZadania();
@@ -69,7 +67,7 @@ public class TaskManager {
           System.out.println("Bye, bye.");
           System.exit(0);
         default:
-          System.out.println("Please select a correct option");
+          System.out.println("Wybierz prawidłową opcję");
       }
       menu(OPTIONS);
     }
@@ -87,7 +85,7 @@ public class TaskManager {
 
   public static void menu(String[] tab) {
     System.out.println(ConsoleColors.BLUE);
-    System.out.println("Please select an option: " + ConsoleColors.RESET);
+    System.out.println("Wybierz opcję: " + ConsoleColors.RESET);
     for (String option : tab) {
       System.out.println(option);
     }
@@ -102,10 +100,10 @@ public class TaskManager {
 
   public static int podajNumer() {
     Scanner scanner = new Scanner(System.in);
-    System.out.println("Podaj numer zadania do usunięcia");
+    System.out.println("Podaj numer zadania do usunięcia:");
     String num = scanner.nextLine();
     while (!czyWiekszaRownaZero(num)) {
-      System.out.println("Nieprawidłowa watrość. Podaj numer większy lub równy 0");
+      System.out.println("Nieprawidłowa watrość. Podaj numer większy lub równy 0.");
       scanner.nextLine();
     }
 
@@ -124,11 +122,11 @@ public class TaskManager {
 
   private static void dodawanieZadania() {
     Scanner scanner = new Scanner(System.in);
-    System.out.println("Podaj opis zadania. ");
+    System.out.println("Podaj opis zadania.");
     String opis = scanner.nextLine();
-    System.out.println( "Podaj termin wykonania zadania. ");
+    System.out.println("Podaj termin wykonania zadania.");
     String data = scanner.nextLine();
-    System.out.println("Czy zadanie jest ważne: true/false ");
+    System.out.println("Czy zadanie jest ważne: true/false.");
     String czyWazne = scanner.nextLine();
     zadania = Arrays.copyOf(zadania, zadania.length + 1);
     zadania[zadania.length - 1] = new String[3];
